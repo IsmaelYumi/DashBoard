@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import Indicator from "./Components/indicator";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -10,8 +8,8 @@ import WeatherChart from "./Components/WeatherChart";
 import ControlPanel from "./Components/ControlPanel";
 
 function App() {
-  const [count, setCount] = useState(0);
-  let [rowsTable, setRowsTable] = useState<any>([])
+  const [,] = useState(0);
+  let [, setRowsTable] = useState<any>([])
   let [indicators, setIndicators] = useState<any>([]);
   useEffect(() => {
     (async () => {
@@ -24,17 +22,18 @@ function App() {
       const parser = new DOMParser();
       const xml = parser.parseFromString(savedTextXML, "application/xml");
       let dataToIndicators = new Array();
+      let locationinfo = xml.getElementsByTagName("location")[0];
+      let nombre= locationinfo.getElementsByTagName("name")[0].childNodes[0].nodeValue;
+      let pais=locationinfo.getElementsByTagName("country")[0].childNodes[0].nodeValue;
       let location = xml.getElementsByTagName("location")[1];
-
+      dataToIndicators.push(["Pais","country",pais])
+      dataToIndicators.push(["Nombre","Name",nombre]);
       let geobaseid = location.getAttribute("geobaseid");
-      dataToIndicators.push(["Location", "geobaseid", geobaseid]);
-
+      dataToIndicators.push(["Geobaseid", "Geobaseid", geobaseid]);
       let latitude = location.getAttribute("latitude");
-      dataToIndicators.push(["Location", "Latitude", latitude]);
-
+      dataToIndicators.push(["Latitud", "latitude", latitude]);
       let longitude = location.getAttribute("longitude");
-      dataToIndicators.push(["Location", "Longitude", longitude]);
-
+      dataToIndicators.push(["Longitud", "Longitude", longitude]);
       //console.log( dataToIndicators )
       let indicatorsElements = Array.from(dataToIndicators).map((element) => (
         <Indicator
@@ -58,15 +57,21 @@ function App() {
   }, []);
 
   return (
-    <Grid container spacing={5}>
-      <Grid xs={6} sm={4} md={3} lg={4}>
+    <Grid container spacing={5.5}>
+      <Grid xs={6} sm={4} md={3} lg={2}>
       {indicators[0]}
       </Grid>
-      <Grid xs={12} sm={4} md={3} lg={4}>
+      <Grid xs={6} sm={4} md={3} lg={2}>
       {indicators[1]}
       </Grid>
-      <Grid xs={12} sm={4} md={3} lg={4}>
+      <Grid xs={12} sm={4} md={3} lg={2}>
       {indicators[2]}
+      </Grid>
+      <Grid xs={12} sm={4} md={3} lg={2}>
+      {indicators[3]}
+      </Grid>
+      <Grid xs={12} sm={4} md={3} lg={2}>
+      {indicators[4]}
       </Grid>
       <Grid>
         <Summary></Summary>
