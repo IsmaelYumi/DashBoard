@@ -6,6 +6,7 @@ import Summary from "./Components/Summary";
 import BasicTable from "./Components/BasicTable";
 import WeatherChart from "./Components/WeatherChart";
 import ControlPanel from "./Components/ControlPanel";
+import Encabezado from "./Components/Encabezado";
 
 function App() {
   const [,] = useState(0);
@@ -57,7 +58,10 @@ function App() {
   }, []);
 
   return (
-    <Grid container spacing={5.5}>
+    <Grid container spacing={5}>
+      <Grid xs={6} sm={4} md={3} lg={12}>
+      <Encabezado></Encabezado>
+      </Grid>
       <Grid xs={6} sm={4} md={3} lg={2}>
       {indicators[0]}
       </Grid>
@@ -73,18 +77,20 @@ function App() {
       <Grid xs={12} sm={4} md={3} lg={2}>
       {indicators[4]}
       </Grid>
-      <Grid>
-        <Summary></Summary>
-      </Grid>
-      <Grid xs={12} md={6} lg={9}>
-        <BasicTable />
-      </Grid>
       <Grid xs={12} lg={2}>
         <ControlPanel />
       </Grid>
       <Grid xs={12} lg={10}>
         <WeatherChart></WeatherChart>
       </Grid>
+      <Grid>
+        <Summary></Summary>
+      </Grid>
+      <Grid xs={12} md={6} lg={9}>
+        <BasicTable />
+      </Grid>
+     
+      
     </Grid>
   );
 }
