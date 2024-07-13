@@ -6,8 +6,12 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState, useRef, } from "react";
+interface ControlPanelProps {
+  onChange: (value: number) => void;
+}
 
-export default function ControlPanel() {
+
+export default function ControlPanel({ onChange }: ControlPanelProps) {
   let [, ] = useState([])
   
  
@@ -52,11 +56,11 @@ export default function ControlPanel() {
     </MenuItem>
   ));
   const handleChange = (event: SelectChangeEvent) => {
-    let idx = parseInt(event.target.value);
-    setSelected(idx);
+    const idx = parseInt(event.target.value);
+    onChange(idx);
+
     if (descriptionRef.current !== null) {
-      descriptionRef.current.innerHTML =
-        idx >= 0 ? items[idx]["description"] : "";
+      descriptionRef.current.innerHTML = idx >= 0 ? items[idx].description : '';
     }
   };
 

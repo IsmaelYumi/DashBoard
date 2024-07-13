@@ -7,11 +7,16 @@ import BasicTable from "./Components/BasicTable";
 import WeatherChart from "./Components/WeatherChart";
 import ControlPanel from "./Components/ControlPanel";
 import Encabezado from "./Components/Encabezado";
+import Seccion from "./Components/Seccion";
 
 function App() {
-  const [,] = useState(0);
-  let [, setRowsTable] = useState<any>([])
+  let [rowsTable, setRowsTable] = useState<any>([])
   let [indicators, setIndicators] = useState<any>([]);
+  let [selectedVariable, setSelectedVariable] = useState<number>(-1);
+  let [infoGraphic, setInfoGraphic] = useState<any[]>([]);
+  
+
+
   useEffect(() => {
     (async () => {
       
@@ -35,7 +40,6 @@ function App() {
       dataToIndicators.push(["Latitud", "latitude", latitude]);
       let longitude = location.getAttribute("longitude");
       dataToIndicators.push(["Longitud", "Longitude", longitude]);
-      //console.log( dataToIndicators )
       let indicatorsElements = Array.from(dataToIndicators).map((element) => (
         <Indicator
           title={element[0]}
@@ -45,29 +49,41 @@ function App() {
       ));
       setIndicators(indicatorsElements);
       let arrayObjects = Array.from( xml.getElementsByTagName("time") ).map( (timeElement) =>  {
-					
-        let rangeHours = timeElement.getAttribute("from").split("T")[1] + " - " + timeElement.getAttribute("to").split("T")[1]
+      let rangeHours = timeElement.getAttribute("from").split("T")[1] + " - " + timeElement.getAttribute("to").split("T")[1]
         let windDirection = timeElement.getElementsByTagName("windDirection")[0].getAttribute("deg") + " "+  timeElement.getElementsByTagName("windDirection")[0].getAttribute("code") 
-        return { "rangeHours": rangeHours,"windDirection": windDirection }
+        let precipitation = timeElement.getElementsByTagName("precipitation")[0]?.getAttribute("probability");
+          let humidity = timeElement.getElementsByTagName("humidity")[0]?.getAttribute("value");
+          let clouds = timeElement.getElementsByTagName("clouds")[0]?.getAttribute("all");
+       
+        return { rangeHours, windDirection, precipitation, humidity, clouds }
 
     })
-    arrayObjects = arrayObjects.slice(0,8)
-    setRowsTable(arrayObjects)  
+    setRowsTable(arrayObjects) 
+    let arrayObjectsG = Array.from(xml.getElementsByTagName("time")).map((timeElement) => {
+      let hour = timeElement.getAttribute("from")?.split("T")[1].substring(0, 5);
+      let precipitation = timeElement.getElementsByTagName("precipitation")[0]?.getAttribute("probability");
+      let humidity = timeElement.getElementsByTagName("humidity")[0]?.getAttribute("value");
+      let clouds = timeElement.getElementsByTagName("clouds")[0]?.getAttribute("all");
+      return { hour, precipitation, humidity, clouds };
+    });
+    setInfoGraphic(arrayObjectsG);
 
     })();
   }, []);
 
   return (
-    <Grid container spacing={5}>
+    <Grid container spacing={5} columns={10}>
       <Grid xs={6} sm={4} md={3} lg={12}>
-      <Encabezado></Encabezado>
+      </Grid>
+      <Grid xs={6} sm={4} md={3} lg={12}>
+    <Seccion  main="#33E3FF" hover="#33E3FF" texto="Hola"></Seccion>
       </Grid>
       <Grid xs={6} sm={4} md={3} lg={2}>
-      {indicators[0]}
+      {indicators[0]} 
       </Grid>
       <Grid xs={6} sm={4} md={3} lg={2}>
       {indicators[1]}
-      </Grid>
+      </Grid> 
       <Grid xs={12} sm={4} md={3} lg={2}>
       {indicators[2]}
       </Grid>
@@ -76,18 +92,24 @@ function App() {
       </Grid>
       <Grid xs={12} sm={4} md={3} lg={2}>
       {indicators[4]}
+
       </Grid>
+      <Grid xs={6} sm={4} md={3} lg={12}>
+    
+      </Grid>
+
       <Grid xs={12} lg={2}>
-        <ControlPanel />
+      <ControlPanel onChange={setSelectedVariable} />
       </Grid>
-      <Grid xs={12} lg={10}>
-        <WeatherChart></WeatherChart>
+      <Grid xs={12} lg={8}>
+      <WeatherChart selectedVariable={selectedVariable} graficos={infoGraphic} />
+        
       </Grid>
       <Grid>
         <Summary></Summary>
       </Grid>
       <Grid xs={12} md={6} lg={9}>
-        <BasicTable />
+      <BasicTable rows={rowsTable} />
       </Grid>
      
       

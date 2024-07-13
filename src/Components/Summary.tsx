@@ -5,8 +5,11 @@ import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
 import sunrise from '../assets/sunrise.jpeg'
 export default function Summary() {
+
+
+
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ maxWidth: 345 } }>
             <CardActionArea>
                 <CardMedia
                     component="img"
@@ -14,9 +17,9 @@ export default function Summary() {
                     image={sunrise}
                     alt="Amanecer"
                 />
-                <CardContent>
+                <CardContent >
                     <Typography gutterBottom component="h2" variant="h6" color="primary">
-                        Amanecer
+                        Amanaecer
                     </Typography>
                     <Typography component="p" variant="h4">
                         05:19:08
